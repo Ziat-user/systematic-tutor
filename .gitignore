@@ -1,0 +1,3 @@
+.study_tmp/
+__pycache__/
+.claude/settings.local.json

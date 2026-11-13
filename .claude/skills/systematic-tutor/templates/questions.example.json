@@ -1,0 +1,29 @@
+{
+  "test_id": "sample_quick_20260101_0900",
+  "title": "動作確認用サンプルテスト",
+  "mode": "quick",
+  "time_limit_minutes": 0,
+  "math": true,
+  "questions": [
+    {
+      "id": "q1",
+      "category": "基礎",
+      "type": "choice",
+      "prompt": "$2x + 3 = 11$ のとき、$x$ の値はどれか。",
+      "options": ["3", "4", "5", "7"]
+    },
+    {
+      "id": "q2",
+      "category": "標準・応用",
+      "type": "text",
+      "prompt": "行列 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ の行列式を求め、計算過程も書きなさい。"
+    },
+    {
+      "id": "q3",
+      "category": "発展・チャレンジ",
+      "type": "text",
+      "rows": 8,
+      "prompt": "行列式が 0 になる行列には、どのような性質があるか。自分の言葉で説明しなさい。"
+    }
+  ]
+}
