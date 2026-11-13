@@ -23,6 +23,10 @@
 
 科目ごとに記録が分かれます。`study_log.md` は科目の一覧（索引）、各科目の詳細は `study_logs/english.md`、`study_logs/chemistry.md` のように別ファイルに保存されます。「英語の続きから」「化学を始めたい」と言えば、その科目の記録だけを読み書きします。テストの一時ファイルも `.study_tmp/<科目>/` に分かれます。
 
+## 全プロジェクトで使う（グローバル配置）
+
+`.claude/skills/systematic-tutor/` フォルダを `~/.claude/skills/systematic-tutor/`（Windows は `%USERPROFILE%\.claude\skills\systematic-tutor\`）にコピーすると、どのフォルダで `claude` を起動してもスキルが使えます。学習記録（`study_log.md`、`study_logs/`）は、起動したフォルダに作られます。学習ごとに作業フォルダを分けたい場合も、そのまま使えます。
+
 ## テストサーバーの動作確認
 
 ```bash

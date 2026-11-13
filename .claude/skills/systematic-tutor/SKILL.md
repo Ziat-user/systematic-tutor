@@ -7,6 +7,13 @@ description: 小学生〜大学・資格レベルの科目を、学校の授業�
 
 LLMとの対話を通じて、小学生〜大学レベルおよび各種資格の体系的な習得を実現するための、学習進行・テスト・記録管理スキル。
 
+## パスの扱い（プロジェクト配置・全体配置の両対応）
+
+このスキルは、プロジェクトの `.claude/skills/systematic-tutor/` に置いても、全プロジェクト共通の `~/.claude/skills/systematic-tutor/` に置いても動くようにする。
+
+- **`<SKILL_DIR>`**：この `SKILL.md` があるディレクトリの絶対パス。スキル読み込み時に示されるベースディレクトリを使う。わからなければ、`.claude/skills/systematic-tutor`、`~/.claude/skills/systematic-tutor` の順に `test_runner.py` の存在を確認して決める。本文中の `templates/`、`test_runner.py` は `<SKILL_DIR>` からの相対パス。
+- **学習データ**（`study_log.md`、`study_logs/`、`.study_tmp/`）は、スキルの置き場所ではなく**カレントの作業ディレクトリ**に作る。`~/.claude/skills/` 配下には書き込まない。
+
 ## コア原則
 
 1. **ファイル駆動の永続化（Single Source of Truth）**
@@ -138,7 +145,7 @@ LLMとの対話を通じて、小学生〜大学レベルおよび各種資格�
 Bashツールのタイムアウトでテストが中断されないよう、**どちらのパターンもバックグラウンドで起動する**。`test_runner.py` は起動時に古い `answers.json` を `answers.json.prev` に退避するため、前回の回答を誤って採点することはない。
 
 ```bash
-python3 .claude/skills/systematic-tutor/test_runner.py \
+python3 "<SKILL_DIR>/test_runner.py" \
   --questions .study_tmp/<slug>/questions.json \
   --output .study_tmp/<slug>/answers.json > .study_tmp/<slug>/server.log 2>&1 &
 sleep 1 && cat .study_tmp/<slug>/server.log
