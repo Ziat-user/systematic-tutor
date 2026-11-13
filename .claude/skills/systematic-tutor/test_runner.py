@@ -121,79 +121,83 @@ def build_html(data: dict) -> str:
   {math_head}
   <style>
     :root {{
-      --bg: #f3f4f6; --card: #ffffff; --text: #1f2937; --muted: #6b7280;
-      --border: #d1d5db; --hover: #f9fafb; --header: #111827; --header-text: #ffffff;
-      --timer: #374151; --accent: #2563eb; --accent-hover: #1d4ed8;
-      --notice-bg: #eff6ff; --notice-border: #3b82f6; --ok: #059669; --warn: #dc2626;
-      --basic: #059669; --std: #2563eb; --adv: #d97706;
+      color-scheme: light dark;
+      --bg: #ffffff; --fg: #000000; --muted: #555555; --line: #000000; --soft: #e6e6e6;
     }}
     @media (prefers-color-scheme: dark) {{
-      :root {{
-        --bg: #0f172a; --card: #1e293b; --text: #e5e7eb; --muted: #9ca3af;
-        --border: #334155; --hover: #273449; --header: #020617; --header-text: #f1f5f9;
-        --timer: #334155; --notice-bg: #172554; --notice-border: #60a5fa;
-      }}
+      :root:not([data-theme="light"]) {{ --bg: #000000; --fg: #ffffff; --muted: #aaaaaa; --line: #ffffff; --soft: #262626; color-scheme: dark; }}
     }}
+    :root[data-theme="dark"] {{ --bg: #000000; --fg: #ffffff; --muted: #aaaaaa; --line: #ffffff; --soft: #262626; color-scheme: dark; }}
+    :root[data-theme="light"] {{ --bg: #ffffff; --fg: #000000; --muted: #555555; --line: #000000; --soft: #e6e6e6; color-scheme: light; }}
+    * {{ border-radius: 0 !important; }}
     body {{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", Roboto, Arial, sans-serif;
-      background: var(--bg); color: var(--text); margin: 0;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", "Times New Roman", serif;
+      background: var(--bg); color: var(--fg); margin: 0; line-height: 1.7;
     }}
     header {{
-      position: sticky; top: 0; background: var(--header); color: var(--header-text);
-      padding: 14px 24px; display: flex; justify-content: space-between; align-items: center;
-      gap: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); z-index: 100;
+      position: sticky; top: 0; background: var(--bg); color: var(--fg);
+      padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; border-bottom: 2px solid var(--line); z-index: 100;
     }}
-    header h1 {{ font-size: 1.1rem; margin: 0; }}
+    header h1 {{ font-size: 1.15rem; margin: 0; letter-spacing: 0.08em; }}
+    .header-right {{ display: flex; align-items: center; gap: 10px; }}
+    #theme-btn {{
+      background: var(--bg); color: var(--fg); border: 1px solid var(--line); padding: 4px 12px;
+      font-family: inherit; font-size: 0.9rem; cursor: pointer; white-space: nowrap;
+    }}
+    #theme-btn:hover {{ background: var(--fg); color: var(--bg); }}
     .timer {{
       font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.05rem; font-weight: bold;
-      background: var(--timer); padding: 6px 12px; border-radius: 6px; white-space: nowrap;
+      border: 1px solid var(--line); padding: 4px 12px; white-space: nowrap;
     }}
-    .timer.warning {{ background: var(--warn); color: #fff; }}
+    .timer.warning {{ background: var(--fg); color: var(--bg); }}
     main {{ max-width: 820px; margin: 28px auto; padding: 0 16px 60px; }}
     .notice {{
-      background: var(--notice-bg); border-left: 4px solid var(--notice-border);
-      padding: 12px 16px; margin-bottom: 24px; border-radius: 4px; font-size: 0.92rem; line-height: 1.6;
+      border: 1px solid var(--line); padding: 10px 16px; margin-bottom: 28px;
+      font-size: 0.9rem;
     }}
-    .question-card {{
-      background: var(--card); border-radius: 8px; padding: 20px; margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    .question-card {{ margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }}
+    .q-header {{ display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }}
+    .q-num {{
+      font-weight: bold; font-size: 1rem; background: var(--fg); color: var(--bg); padding: 1px 12px;
     }}
-    .q-header {{ display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }}
-    .q-num {{ font-weight: bold; font-size: 1.05rem; }}
-    .q-badge {{ color: #fff; font-size: 0.78rem; padding: 2px 8px; border-radius: 999px; font-weight: 600; }}
-    .badge-basic {{ background: var(--basic); }}
-    .badge-std {{ background: var(--std); }}
-    .badge-adv {{ background: var(--adv); }}
-    .q-prompt {{ font-size: 1rem; line-height: 1.7; margin-bottom: 14px; white-space: pre-wrap; overflow-x: auto; }}
-    .options-group {{ display: flex; flex-direction: column; gap: 8px; }}
+    .q-badge {{ font-size: 0.8rem; padding: 0 8px; border: 1px solid var(--line); }}
+    .q-prompt {{ font-size: 1rem; margin-bottom: 14px; white-space: pre-wrap; overflow-x: auto; }}
+    .options-group {{ display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); }}
     .option-label {{
-      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-      border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer;
+      border-top: 1px solid var(--line);
     }}
-    .option-label:hover {{ background: var(--hover); }}
-    .opt-no {{ color: var(--muted); font-weight: 600; }}
+    .option-label:first-child {{ border-top: none; }}
+    .option-label:hover {{ background: var(--soft); }}
+    input[type=radio] {{ accent-color: var(--fg); margin: 0; width: 16px; height: 16px; }}
+    .opt-no {{ font-weight: bold; }}
     textarea {{
-      width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border);
-      border-radius: 6px; background: var(--card); color: var(--text);
+      width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--line);
+      background: var(--bg); color: var(--fg);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem; line-height: 1.5; resize: vertical;
+      font-size: 0.95rem; line-height: 1.6; resize: vertical;
     }}
-    textarea:focus {{ outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }}
+    textarea::placeholder {{ color: var(--muted); }}
+    textarea:focus {{ outline: 2px solid var(--fg); outline-offset: 1px; }}
     .actions {{ text-align: center; margin-top: 32px; }}
     button#submit-btn {{
-      background: var(--accent); color: #fff; border: none; padding: 14px 36px;
-      font-size: 1.05rem; font-weight: bold; border-radius: 8px; cursor: pointer;
+      background: var(--bg); color: var(--fg); border: 2px solid var(--line); padding: 12px 40px;
+      font-family: inherit; font-size: 1.05rem; font-weight: bold; letter-spacing: 0.1em; cursor: pointer;
     }}
-    button#submit-btn:hover {{ background: var(--accent-hover); }}
-    button#submit-btn:disabled {{ background: #9ca3af; cursor: not-allowed; }}
-    #status-msg {{ margin-top: 16px; font-weight: bold; color: var(--ok); line-height: 1.6; }}
+    button#submit-btn:hover {{ background: var(--fg); color: var(--bg); }}
+    button#submit-btn:disabled {{ opacity: 0.4; cursor: not-allowed; background: var(--bg); color: var(--fg); }}
+    #status-msg {{ margin-top: 16px; font-weight: bold; }}
     #save-state {{ font-size: 0.8rem; color: var(--muted); margin-top: 8px; }}
   </style>
 </head>
 <body>
   <header>
     <h1>{title}</h1>
-    <div id="timer-box" class="timer"><span id="timer-label">経過時間</span>: <span id="timer-display">--:--</span></div>
+    <div class="header-right">
+      <button type="button" id="theme-btn" onclick="toggleTheme()" aria-label="表示モード切替"></button>
+      <div id="timer-box" class="timer"><span id="timer-label">経過時間</span>: <span id="timer-display">--:--</span></div>
+    </div>
   </header>
   <main>
     <div class="notice">
@@ -219,6 +223,28 @@ def build_html(data: dict) -> str:
     let timeLimitSec = 0;
     let clockOffsetMs = 0;      // サーバー時刻 - ブラウザ時刻
     let autosaveTimer = null;
+
+    const THEME_KEY = "systematic_tutor_theme";
+    function currentTheme() {{
+      const t = document.documentElement.getAttribute("data-theme");
+      if (t) return t;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }}
+    function renderThemeBtn() {{
+      document.getElementById("theme-btn").textContent =
+        currentTheme() === "dark" ? "☀ ライト" : "● ダーク";
+    }}
+    function toggleTheme() {{
+      const next = currentTheme() === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try {{ localStorage.setItem(THEME_KEY, next); }} catch (e) {{}}
+      renderThemeBtn();
+    }}
+    try {{
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === "dark" || saved === "light") document.documentElement.setAttribute("data-theme", saved);
+    }} catch (e) {{}}
+    renderThemeBtn();
 
     function nowServer() {{ return Date.now() + clockOffsetMs; }}
 
