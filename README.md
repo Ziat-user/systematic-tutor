@@ -7,7 +7,8 @@
 ├── SKILL.md                         # スキル本体（Claude が読む指示書）
 ├── test_runner.py                   # ローカルHTMLテストサーバー（Python 標準ライブラリのみ）
 └── templates/
-    ├── study_log.md                 # 学習記録のテンプレート
+    ├── study_log.md                 # 科目の索引テンプレート（ルートの study_log.md になる）
+    ├── subject_log.md               # 科目ごとの学習記録テンプレート（study_logs/<slug>.md になる）
     └── questions.example.json       # テスト問題のサンプル
 ```
 
@@ -17,6 +18,10 @@
 2. 作業フォルダでターミナルを開き、`claude` を起動します。
 3. 「`systematic-tutor` を使って〇〇を学びたい」と話しかけると始まります。
 4. 2回目以降は「`study_log.md` を読んで続きから始めて」と伝えれば再開できます。
+
+## 複数科目の学習
+
+科目ごとに記録が分かれます。`study_log.md` は科目の一覧（索引）、各科目の詳細は `study_logs/english.md`、`study_logs/chemistry.md` のように別ファイルに保存されます。「英語の続きから」「化学を始めたい」と言えば、その科目の記録だけを読み書きします。テストの一時ファイルも `.study_tmp/<科目>/` に分かれます。
 
 ## テストサーバーの動作確認
 
